@@ -87,13 +87,31 @@ class SearchPage extends Component {
     super(props);
     this.state = {
       searchString: 'london',
-      isLoading: false
+      isLoading: false,
+      message: ''
     };
   }
 
+  _handleResponse(response) {
+    this.setState({ isLoading: false });
+    if (response.application_response_code.substr(0, 1) === '1') {
+      console.log('Properties found: ' + response.listings.length);
+    } else {
+      this.setState({ message: 'Location not recognized please try again.'});
+    }
+  }
+
   _executeQuery(query) {
-    console.log(query);
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true, message: '' });
+    fetch(query)
+      .then(response => response.json())
+      .then(json => this._handleResponse(json.response))
+      .catch(error => {
+        this.setState({
+          isLoading: false,
+          message: 'Something bad happened ' + error
+        });
+      });
   }
 
   onSearchPressed() {
@@ -138,6 +156,7 @@ class SearchPage extends Component {
         </TouchableHighlight>
         <Image source={require('image!house')} style={styles.image}/>
         {spinner}
+        <Text style={styles.description}>{this.state.message}</Text>
       </View>
     );
   }
