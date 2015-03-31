@@ -9,7 +9,6 @@ var {
   TouchableHighlight,
   ActivityIndicatorIOS,
   Image,
-  ix,
   Component
 } = React;
 
@@ -26,43 +25,61 @@ var styles = StyleSheet.create({
     alignItems: 'center'
   },
   flowRight: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  alignSelf: 'stretch'
-},
-buttonText: {
-  fontSize: 18,
-  color: 'white',
-  alignSelf: 'center'
-},
-button: {
-  height: 36,
-  flex: 1,
-  flexDirection: 'row',
-  backgroundColor: '#48BBEC',
-  borderColor: '#48BBEC',
-  borderWidth: 1,
-  borderRadius: 8,
-  marginBottom: 10,
-  alignSelf: 'stretch',
-  justifyContent: 'center'
-},
-searchInput: {
-  height: 36,
-  padding: 4,
-  marginRight: 5,
-  flex: 4,
-  fontSize: 18,
-  borderWidth: 1,
-  borderColor: '#48BBEC',
-  borderRadius: 8,
-  color: '#48BBEC'
-}
-
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  buttonText: {
+    fontSize: 18,
+    color: 'white',
+    alignSelf: 'center'
+  },
+  button: {
+    height: 36,
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: '#48BBEC',
+    borderColor: '#48BBEC',
+    borderWidth: 1,
+    borderRadius: 8,
+    marginBottom: 10,
+    alignSelf: 'stretch',
+    justifyContent: 'center'
+  },
+  searchInput: {
+    height: 36,
+    padding: 4,
+    marginRight: 5,
+    flex: 4,
+    fontSize: 18,
+    borderWidth: 1,
+    borderColor: '#48BBEC',
+    borderRadius: 8,
+    color: '#48BBEC'
+  },
+  image: {
+    width: 217,
+    height: 138
+  }
 });
 
 class SearchPage extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchString: 'london'
+    };
+  }
+
+  onSearchTextChanged(event) {
+    console.log('onSearchTextChanged');
+    this.setState({ searchString: event.nativeEvent.text });
+    console.log(this.state.searchString);
+  }
+
   render() {
+    console.log('I am rendering!');
     return (
       <View style={styles.container}>
         <Text style={styles.description}>
@@ -74,7 +91,9 @@ class SearchPage extends Component {
         <View style={styles.flowRight}>
           <TextInput
             style={styles.searchInput}
-            placeholder='Search via name or postcode'/>
+            placeholder='Search via name or postcode'
+            value={this.state.searchString}
+            onChange={this.onSearchTextChanged.bind(this)}/>
           <TouchableHighlight style={styles.button}
               underlayColor='#99d9f4'>
             <Text style={styles.buttonText}>Go</Text>
@@ -84,7 +103,7 @@ class SearchPage extends Component {
             underlayColor='#99d9f4'>
           <Text style={styles.buttonText}>Location</Text>
         </TouchableHighlight>
-
+        <Image source={require('image!house')} style={styles.image}/>
       </View>
     );
   }
