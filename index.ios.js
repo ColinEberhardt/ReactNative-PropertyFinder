@@ -12,7 +12,7 @@ var styles = React.StyleSheet.create({
 class PropertyFinderApp extends React.Component {
   render() {
     return (
-      <React.NavigatorIOS
+      <NavigatorIOS
         style={styles.container}
         initialRoute={{
           title: 'Property Finder',
