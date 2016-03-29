@@ -11,7 +11,7 @@ var {
 
 var styles = StyleSheet.create({
   container: {
-    marginTop: 65
+    marginTop: 0
   },
   heading: {
     backgroundColor: '#F8F8F8',

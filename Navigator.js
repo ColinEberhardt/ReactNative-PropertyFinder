@@ -7,12 +7,17 @@ import SearchPage from './SearchPage';
 var styles = React.StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop:65,
+    paddingTop:64,
   },
   navBar: {
     backgroundColor:'#CCC',
     borderBottomColor:'#333',
     borderBottomWidth:1
+  },
+  navTextBack: {
+    top:22,
+    fontSize:12,
+    fontWeight:'bold',
   },
   navText: {
     top:15,
@@ -34,7 +39,7 @@ export default class CustomNavigator extends React.Component {
         return (
           <React.TouchableOpacity
             onPress={() => navigator.pop()} style={styles.navBack}>
-            <React.Text style={styles.navText}>
+            <React.Text style={styles.navTextBack}>
               {previousRoute.title}
             </React.Text>
           </React.TouchableOpacity>
