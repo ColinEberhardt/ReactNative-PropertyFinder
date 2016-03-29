@@ -1,14 +1,12 @@
 'use strict';
 
 var React = require('react-native');
-var SearchResults = require('./SearchResults');
 var {
   StyleSheet,
   Text,
   TextInput,
   View,
   TouchableHighlight,
-  ActivityIndicatorIOS,
   Image,
   Component
 } = React;
@@ -66,12 +64,12 @@ var styles = StyleSheet.create({
 
 function urlForQueryAndPage(key, value, pageNumber) {
   var data = {
-      country: 'uk',
-      pretty: '1',
-      encoding: 'json',
-      listing_type: 'buy',
-      action: 'search_listings',
-      page: pageNumber
+    country: 'uk',
+    pretty: '1',
+    encoding: 'json',
+    listing_type: 'buy',
+    action: 'search_listings',
+    page: pageNumber
   };
   data[key] = value;
 
@@ -80,7 +78,7 @@ function urlForQueryAndPage(key, value, pageNumber) {
     .join('&');
 
   return 'http://api.nestoria.co.uk/api?' + querystring;
-};
+}
 
 class SearchPage extends Component {
 
@@ -97,21 +95,23 @@ class SearchPage extends Component {
     this.setState({ isLoading: false });
     if (response.application_response_code.substr(0, 1) === '1') {
       this.props.navigator.push({
-        title: 'Results',
-        component: SearchResults,
-        passProps: {listings: response.listings}
+        title: "Results",
+        component: require('./SearchResults'),
+        passProps: { listings: response.listings }
       });
     } else {
-      this.setState({ message: 'Location not recognized please try again.'});
+      this.setState({ message: 'Location not recognized please try again.' });
     }
   }
 
   _executeQuery(query) {
+    console.log(query);
     this.setState({ isLoading: true, message: '' });
     fetch(query)
       .then(response => response.json())
       .then(json => this._handleResponse(json.response))
       .catch(error => {
+        console.log(error);
         this.setState({
           isLoading: false,
           message: 'Something bad happened ' + error
@@ -144,11 +144,20 @@ class SearchPage extends Component {
   }
 
   render() {
-    var spinner = this.state.isLoading ?
-      ( <ActivityIndicatorIOS
+    var spinner = <View />;
+    if (this.state.isLoading) {
+      if (React.Platform.OS == 'android') {
+        spinner = <React.ProgressBarAndroid
+          indeterminate
+          styleAttr='Large'
+          color='#48BBEC'
+        />
+      } else {
+        spinner = <React.ActivityIndicatorIOS
           hidden='true'
-          size='large'/> ) :
-      ( <View/>);
+          size='large' />;
+      }
+    }
 
     return (
       <View style={styles.container}>
@@ -163,19 +172,19 @@ class SearchPage extends Component {
             style={styles.searchInput}
             placeholder='Search via name or postcode'
             value={this.state.searchString}
-            onChange={this.onSearchTextChanged.bind(this)}/>
+            onChange={this.onSearchTextChanged.bind(this)} />
           <TouchableHighlight style={styles.button}
-              underlayColor='#99d9f4'
-              onPress={this.onSearchPressed.bind(this)}>
+            underlayColor='#99d9f4'
+            onPress={this.onSearchPressed.bind(this)}>
             <Text style={styles.buttonText}>Go</Text>
           </TouchableHighlight>
         </View>
         <TouchableHighlight style={styles.button}
-            onPress={this.onLocationPressed.bind(this)}
-            underlayColor='#99d9f4'>
+          onPress={this.onLocationPressed.bind(this)}
+          underlayColor='#99d9f4'>
           <Text style={styles.buttonText}>Location</Text>
         </TouchableHighlight>
-        <Image source={require('image!house')} style={styles.image}/>
+        <Image source={require('image!house')} style={styles.image} />
         {spinner}
         <Text style={styles.description}>{this.state.message}</Text>
       </View>
