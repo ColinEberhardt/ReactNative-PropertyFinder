@@ -9,6 +9,4 @@ class PropertyFinderApp extends React.Component {
   }
 }
 
-React.AppRegistry.registerComponent('PropertyFinder', function () {
-  return PropertyFinderApp
-});
+React.AppRegistry.registerComponent('PropertyFinder', () => { return PropertyFinderApp });

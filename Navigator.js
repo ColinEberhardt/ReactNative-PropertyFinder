@@ -7,7 +7,7 @@ import SearchPage from './SearchPage';
 var styles = React.StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop:64,
+    paddingTop:(React.Platform.OS == 'ios' ? 64 : 56),
   },
   navBar: {
     backgroundColor:'#CCC',
@@ -26,6 +26,16 @@ var styles = React.StyleSheet.create({
   }
 });
 
+var _navigator; // we fill this up upon on first navigation.
+
+React.BackAndroid.addEventListener('hardwareBackPress', () => {
+  if (_navigator.getCurrentRoutes().length === 1  ) {
+    return false;
+  }
+  _navigator.pop();
+  return true;
+});
+
 export default class CustomNavigator extends React.Component {
   constructor(props) {
     super(props);
@@ -35,7 +45,7 @@ export default class CustomNavigator extends React.Component {
         if (index === 0) {
           return null
         }
-        const previousRoute = navState.routeStack[index - 1]
+        const previousRoute = navState.routeStack[index - 1];
         return (
           <React.TouchableOpacity
             onPress={() => navigator.pop()} style={styles.navBack}>
@@ -58,8 +68,7 @@ export default class CustomNavigator extends React.Component {
     };
 
     this.renderScene = (route, navigator) => {
-      // count the number of func calls
-      console.log(route, navigator);
+      _navigator = navigator;
       if (route.component) {
         return React.createElement(route.component, { navigator, ...route.passProps });
       }
